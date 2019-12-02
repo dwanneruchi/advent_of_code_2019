@@ -23,3 +23,15 @@ pip install jupyter
 python -m ipykernel install --user --name=advent
 jupyter notebook
 ```
+
+## Basic Testing
+
+Attempting to hold myself accountable to unit testing. I am just storing tests within specific day's challenge folder. Once pytest is installed testing is pretty easy: 
+
+```bash
+# basic test
+python -m pytest test_day01.py
+
+# below could be used to help with 
+python -m pytest test_day01.py -x -v
+```
