@@ -7,9 +7,9 @@ def mode_check_1(mode, list_vals, init_val, rel_base):
 
     if mode == 2:
         value =  rel_base + list_vals[init_val + 1]
-    
+   
     return value
-    
+   
 def mode_check_2(mode, list_vals, init_val, rel_base):
     if mode == 0:
         value = list_vals[init_val + 2]
@@ -19,7 +19,7 @@ def mode_check_2(mode, list_vals, init_val, rel_base):
 
     if mode == 2:
         value = rel_base + list_vals[init_val + 2]
-        
+       
     return value
 
 def val_literal(mode, list_vals, init_val, rel_base):
@@ -31,22 +31,22 @@ def val_literal(mode, list_vals, init_val, rel_base):
 
     if mode == 2:
         value = rel_base + list_vals[init_val + 3]
-        
+       
     return value    
 
 def intcode_pc(list_vals, init_val, rel_base, input_val):
-    
+   
     """Modified in Day 9"""
-    
+   
     while True:
 
         # identify the opt_code_str
         opt_code_str = str(list_vals[init_val])
 
-        # take actual opt code: 
+        # take actual opt code:
         opt_code = int(opt_code_str[-2:])
 
-        # modes can be 0 == position or 1 == immediate 
+        # modes can be 0 == position or 1 == immediate
         # handle mode with try / except
         mode_3, mode_2, mode_1 = 0, 0, 0
 
@@ -84,18 +84,21 @@ def intcode_pc(list_vals, init_val, rel_base, input_val):
             val1 = mode_check_1(mode_1, list_vals, init_val, rel_base)
             val2 = mode_check_2(mode_2, list_vals, init_val, rel_base)
             ans = list_vals[val1] * list_vals[val2]
-
+            
             # overwrite
             list_vals[write_ix] = ans
-      
+     
             init_val += 4
 
         elif opt_code == 3:
+           
+            #write_ix = val_literal(mode_3, list_vals, init_val, rel_base)
+            # TODO: still slightly confused by this one.
+            if mode_3 == 2:
+                list_vals[rel_base + list_vals[init_val + 1]] = input_val
+            else:
+                list_vals[list_vals[init_val + 1]] = input_val # we need this step automated now
 
-            write_ix = val_literal(mode_3, list_vals, init_val, rel_base)
-            
-            #list_vals[write_ix] = int(input())
-            list_vals[write_ix] = input_val # we need this step automated now
             init_val += 2
 
 
@@ -107,14 +110,14 @@ def intcode_pc(list_vals, init_val, rel_base, input_val):
             val1 = mode_check_1(mode_1, list_vals, init_val, rel_base)
    
             init_val += 2  
-            
+           
              # seems to make sense to return output after Opt Code 4
             return_dict = {}
             return_dict['list'] = list_vals
             return_dict['init_val'] = init_val
             return_dict['rel_base'] = rel_base
             return_dict['robo_output'] = list_vals[val1]
-            
+           
             return return_dict
 
         elif opt_code == 5:
@@ -138,7 +141,7 @@ def intcode_pc(list_vals, init_val, rel_base, input_val):
                 init_val = list_vals[val2]
             else:
                 init_val += 3
-
+            
         elif opt_code == 7:
 
             # less than
@@ -151,7 +154,7 @@ def intcode_pc(list_vals, init_val, rel_base, input_val):
                 list_vals[write_ix] = 1
             else:
                 list_vals[write_ix] = 0
-                
+               
             init_val += 4
 
         elif opt_code == 8:
@@ -166,24 +169,24 @@ def intcode_pc(list_vals, init_val, rel_base, input_val):
                 list_vals[write_ix] = 1
             else:
                 list_vals[write_ix] = 0
-                
-            init_val += 4
             
+            init_val += 4
+           
         elif opt_code == 9:
 
             # update relative base
             val1 = mode_check_1(mode_1, list_vals, init_val, rel_base)
             rel_base += list_vals[val1]
             init_val += 2
-            
+           
         elif opt_code == 99:
             # Return stuff, but catch it with a special robo output
             return_dict = {}
             return_dict['list'] = [1,2,3,4]
-            return_dict['init_val'] = 5
-            return_dict['rel_base'] = 5
+            return_dict['init_val'] = 0
+            return_dict['rel_base'] = 0
             return_dict['robo_output'] = 'FINISHED'
-            
+           
             return return_dict
 
         else:
